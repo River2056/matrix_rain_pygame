@@ -181,7 +181,8 @@ charpool = [
 
 WIDTH = 1920
 HEIGHT = 1080
-CHAR_SIZE = 8
+CHAR_SIZE = 10
+DENSE = 2
 
 
 class Symbol:
@@ -199,7 +200,7 @@ class Stream:
     def __init__(self, x):
         self.x = x
         self.pool = []
-        self.speed = random.randint(10, 15)
+        self.speed = random.randint(10, 50)
 
     def populate_pool(self):
         self.pool.clear()
@@ -209,7 +210,9 @@ class Stream:
                 Symbol(
                     self.x,
                     starting_point - (CHAR_SIZE * i),
-                    (243, 243, 243) if i == 0 else (0, 197, 0),
+                    (243, 243, 243, int(255 - (255 / 100) * ((i / 100) * i)))
+                    if i <= 2
+                    else (0, 197, 0, int(255 - (255 / 100) * ((i / 100) * i))),
                 )
             )
 
@@ -241,12 +244,13 @@ def main():
     pygame.display.set_caption("matrix rain")
 
     # screen size
-    # screen = pygame.display.set_mode((WIDTH, HEIGHT))
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
     font = pygame.font.Font("fonts/NotoSansJP-Regular.otf", CHAR_SIZE)
     clock = pygame.time.Clock()
-    stream_arr = [Stream(CHAR_SIZE * i) for i in range(WIDTH // CHAR_SIZE)]
+    stream_arr = [
+        Stream((CHAR_SIZE // DENSE) * i) for i in range(WIDTH // (CHAR_SIZE // DENSE))
+    ]
     for stream in stream_arr:
         stream.populate_pool()
 
@@ -257,8 +261,13 @@ def main():
                 font_surf = font.render(
                     symbol.char,
                     True,
-                    pygame.Color(symbol.color[0], symbol.color[1], symbol.color[2]),
+                    pygame.Color(
+                        symbol.color[0],
+                        symbol.color[1],
+                        symbol.color[2],
+                    ),
                 )
+                font_surf.set_alpha(symbol.color[3])
                 screen.blit(font_surf, (symbol.x, symbol.y))
             stream.move()
 
