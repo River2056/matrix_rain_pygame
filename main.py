@@ -181,7 +181,7 @@ charpool = [
 
 WIDTH = 1920
 HEIGHT = 1080
-CHAR_SIZE = 10
+CHAR_SIZE = 12
 DENSE = 2
 
 
