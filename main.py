@@ -203,7 +203,7 @@ class Stream:
 
     def populate_pool(self):
         self.pool.clear()
-        starting_point = random.randint(-600, 0)
+        starting_point = random.randint(-800, -100)
         for i in range(random.randint(10, 100)):
             self.pool.append(
                 Symbol(
